@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from django.contrib import messages
 from users.models import CustomUser, Role
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 @login_required(login_url='user_login')
 @csrf_exempt
@@ -11,6 +12,30 @@ def gestionar_usuarios(request):
     # Recuperar usuarios y roles
     usuarios = CustomUser.objects.all()
     roles = Role.objects.all()
+
+     # Verifica si la solicitud es AJAX
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        search_query = request.GET.get('search', '')
+        usuarios = usuarios.filter(
+            first_name__icontains=search_query
+        ) | usuarios.filter(
+            last_name__icontains=search_query
+        ) | usuarios.filter(
+            email__icontains=search_query
+        )
+        usuarios_data = [
+            {
+                'id': user.id,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'phone': user.phone if user.phone else 'No registrado',  
+                'role': user.role.name if user.role else 'Sin rol', 
+                'is_active': user.is_active
+            }
+            for user in usuarios
+        ]
+        return JsonResponse({'usuarios': usuarios_data})
 
     if request.method == 'POST':
         # Crear un nuevo usuario

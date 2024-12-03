@@ -20,10 +20,17 @@
     </div>
     {% endif %}
 
-    <!-- Botón para abrir el modal de nuevo usuario -->
-    <button class="btn btn-primary mb-4" type="button" data-toggle="modal" data-target="#nuevo_usuario">
-        <i class="fas fa-plus"></i> Nuevo Usuario
-    </button>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+         <!-- Botón para abrir el modal de nuevo usuario -->
+        <button class="btn btn-primary mb-4 py-2 px-2" type="button" data-toggle="modal" data-target="#nuevo_usuario">
+            <i class="fas fa-plus"></i> Nuevo Usuario
+        </button>
+        <!-- Barra de busqueda -->
+        <form method="get" class="form-inline">
+            <input type="text" id="search-bar" class="form-control mr-2" placeholder="Buscar usuarios" value="{{ request.GET.search|default:'' }}">
+        </form>        
+    </div>
+   
 
     <!-- Modal Nuevo Usuario -->
     <div id="nuevo_usuario" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-titulo" aria-hidden="true">
@@ -142,25 +149,102 @@
     }, 6000);
 </script>
 <script>
-    document.getElementById('searchInput').addEventListener('input', function () {
-        const searchQuery = this.value;
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('search-bar'); 
+        const tableBody = document.querySelector('#usuarios-table tbody'); 
 
-        // Hacer una solicitud AJAX
-        fetch(`?search=${searchQuery}`)
+        // Delegación de eventos para los botones de acción
+        tableBody.addEventListener('click', function (event) {
+            // Botón de "Eliminar"
+            if (event.target.closest('.btn-danger')) {
+                const usuarioId = event.target.closest('form').querySelector('input[name="usuario_id"]').value;
+                if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
+                    // Enviar el formulario para eliminar el usuario
+                    const form = event.target.closest('form');
+                    form.submit();
+                }
+            }
+
+            // Botón de "Editar"
+            if (event.target.closest('.btn-success')) {
+                const usuarioId = event.target.closest('a').getAttribute('href').split('/').pop();
+                // Redirigir al usuario a la página de edición
+                window.location.href = `/editar_usuario/${usuarioId}`;
+            }
+
+            // Botón de "Cambiar Estado"
+            if (event.target.closest('.btn-warning')) {
+                const usuarioId = event.target.closest('form').querySelector('input[name="usuario_id"]').value;
+                const cambiarEstadoForm = event.target.closest('form');
+                cambiarEstadoForm.submit();
+            }
+        });
+
+        // Hacer la solicitud AJAX para buscar los usuarios
+        searchInput.addEventListener('input', function () {
+            const query = searchInput.value;
+
+            fetch(`/gestionar-usuarios/?search=${query}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
             .then(response => response.json())
             .then(data => {
-                // Actualizar los resultados en la página
-                const usuariosList = document.getElementById('usuariosList');
-                usuariosList.innerHTML = ''; // Limpiar la lista de usuarios
+                tableBody.innerHTML = ''; // Limpiar las filas anteriores
 
-                data.usuarios.forEach(usuario => {
-                    const userDiv = document.createElement('div');
-                    userDiv.textContent = `${usuario.first_name} ${usuario.last_name} - ${usuario.email}`;
-                    usuariosList.appendChild(userDiv);
-                });
+                if (data.usuarios.length > 0) {
+                    data.usuarios.forEach(usuario => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                        <td>${usuario.id}</td>
+                        <td>${usuario.first_name}</td>
+                        <td>${usuario.last_name}</td>
+                        <td>${usuario.email}</td>
+                        <td>${usuario.phone || 'No registrado'}</td>
+                        <td>${usuario.role || 'Sin rol'}</td>
+                        <td>
+                            <span class="badge ${usuario.is_active ? 'badge-success' : 'badge-danger'}">
+                                ${usuario.is_active ? 'Activo' : 'Inactivo'}
+                            </span>
+                        </td>
+                        <td>
+                            <!-- Enlace de editar, usando la URL correctamente -->
+                            <a href="/gestionar-usuarios/editar/${usuario.id}/" class="btn btn-success btn-sm">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            
+                            <!-- Botón de eliminar -->
+                            <form method="post" action="/gestionar-usuarios/" class="d-inline">
+                                <input type="hidden" name="usuario_id" value="${usuario.id}">
+                                <button class="btn btn-danger btn-sm" type="submit">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                            
+                            <!-- Botón para cambiar el estado -->
+                            <form method="post" action="/gestionar-usuarios/" class="d-inline">
+                                <input type="hidden" name="usuario_id" value="${usuario.id}">
+                                <input type="hidden" name="cambiar_estado" value="1">
+                                <button class="btn btn-warning btn-sm" type="submit">
+                                    <i class="fas ${usuario.is_active ? 'fa-user-slash' : 'fa-user'}"></i>
+                                </button>
+                            </form>
+                        </td>
+                    `;
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    // Si no hay resultados, mostrar mensaje en la tabla
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="8" class="text-center">No se encontraron usuarios.</td>
+                        </tr>
+                    `;
+                }
             })
             .catch(error => console.error('Error:', error));
+        });
     });
 </script>
-
 {% endblock %}
