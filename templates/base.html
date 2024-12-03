@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
+    <title>{% block title %}Panel de Administración{% endblock %}</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link href="{% static 'css/dataTables.bootstrap4.min.css' %}" rel="stylesheet" crossorigin="anonymous" />
+    <link rel="stylesheet" href="{% static 'js/jquery-ui/jquery-ui.min.css' %}">
+    <link href="{% static 'css/stily.css' %}" rel="stylesheet">
+    <!-- <link href="{% static 'css/styles.css' %}" rel="stylesheet"> -->
+</head>
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        {% include 'includes/sidebar.html' %}
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                {% include 'includes/topbar.html' %}
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    {% block content %}
+                    <!-- Contenido dinámico irá aquí -->
+                    {% endblock %}
+                </div>
+            </div>
+            <!-- Footer -->
+            {% include 'includes/footer.html' %}
+        </div>
+    </div>
+
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/jquery.dataTables.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/dataTables.bootstrap4.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/sweetalert2.all.min.js' %}"></script>
+    <script src="{% static 'js/Chart.bundle.min.js' %}"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'js/funciones.js' %}"></script>
+    <script src="{% static 'js/all.min.js' %}" crossorigin="anonymous"></script>
+
+
+    <script>
+        var fecha = new Date();
+        var meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        var dia = fecha.getDate();
+        var mes = meses[fecha.getMonth()];
+        var anio = fecha.getFullYear();
+        var fechaFormateada = dia + " de " + mes + " de " + anio;
+        document.getElementById("fecha-actual").textContent = fechaFormateada;
+    </script>
+</body>
+</html>

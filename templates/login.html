@@ -1,0 +1,87 @@
+<!-- Cargar archivos estáticos -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
+  <title>Dulce d' amour</title>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+</head>
+
+<body class="bg-gradient-primary">
+    <div id="layoutAuthentication">
+        <div id="layoutAuthentication_content">
+            <main>
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-5">
+                            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                                <div class="card-header text-center">
+                                    <img class="img-thumbnail" src="{% static 'img/logo.png' %}" width="100">
+                                </div>
+                                <div class="card-body">
+                                    <!-- Mostrar mensajes de error -->
+                                    {% if messages %}
+                                        <div id="message-alert" class="alert alert-danger" role="alert">
+                                            <ul class="list-unstyled mb-0 pl-0">
+                                                {% for message in messages %}
+                                                    <p>{{ message }}</p>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                    <!-- Formulario actualizado para Django -->
+                                    <form method="POST" action="{% url 'user_login' %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="username"><i class="fas fa-user"></i> Usuario</label>
+                                            <input class="form-control py-4" id="username" name="username" type="text" placeholder="Ingrese usuario" required />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="small mb-1" for="password"><i class="fas fa-key"></i> Contraseña</label>
+                                            <input class="form-control py-4" id="password" name="password" type="password" placeholder="Ingrese Contraseña" required />
+                                        </div>
+
+                                        <div class="form-group text-center">
+                                            <input type="checkbox" id="remember" name="remember">
+                                            <label for="remember"> Recordar contraseña</label>
+                                        </div>
+                                        <div class="form-group text-center">
+                                            <a href="{% url 'password_reset_request' %}">¿Olvidaste tu contraseña?</a>
+                                        </div>
+                                        <div class="form-group d-flex align-items-center justify-content-center mt-4 mb-0">
+                                            <button class="btn btn-primary" type="submit">Ingresar</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="{% static 'js/jquery-3.6.0.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/all.min.js' %}" crossorigin="anonymous"></script>
+    <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <script>
+        setTimeout(function() {
+            var alertBox = document.getElementById('message-alert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 6000);
+    </script>
+</body>
+</html>
