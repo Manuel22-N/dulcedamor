@@ -23,8 +23,9 @@
         </a>
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="#">Nuevo Producto</a>
-                <a class="collapse-item" href="#">Productos</a>
+                <a class="collapse-item" href="{% url 'nuevo_producto' %}">Nuevo Producto</a>
+                <a class="collapse-item" href="{% url 'actualizar_producto' %}">Actualizar Productos</a>
+                <a class="collapse-item" href="{% url 'productos' %}">Productos</a>
             </div>
         </div>
     </li>
@@ -36,12 +37,13 @@
         </a>
         <div id="collapseClientes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="#">Nueva Categoría</a>
-                <a class="collapse-item" href="#">Categorías</a>
+                <a class="collapse-item" href="{% url 'nueva_categoria' %}">Nueva Categoría</a>
+                <a class="collapse-item" href="{% url 'editar_categorias'%}">Editar Categoría</a>
+                <a class="collapse-item" href="{% url 'categorias' %}">Categorías</a>
             </div>
         </div>
     </li>
-
+    
     <li class="nav-item">
         <a class="nav-link" href="{% url 'gestionar_usuarios' %}">
             <i class="fas fa-user"></i>

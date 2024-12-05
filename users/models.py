@@ -53,3 +53,36 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+from django.db import models
+
+class Categoria(models.Model):
+    # Definimos los campos de la categoría
+    codigo = models.CharField(max_length=100, unique=True)  # Código de la categoría
+    nombre = models.CharField(max_length=100)  # Nombre de la categoría
+    estado = models.CharField(max_length=20, choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')])  # Estado de la categoría
+
+    def __str__(self):
+        return self.nombre  # Representación legible de la categoría en el admin y otros lugares
+
+    class Meta:
+        db_table = 'categoria'  # Nombre de la tabla en la base de datos, si no se especifica Django usa el nombre del modelo en minúsculas
+
+
+
+
+class Producto(models.Model):
+    codigo = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=255)
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+    stock = models.IntegerField()
+    estado = models.CharField(max_length=10, choices=[('activo', 'Activo'), ('inactivo', 'Inactivo')])
+
+    # Relación con la categoría (mantienes la clave foránea)
+    nombre_categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    class Meta:
+        db_table = 'productos'
+
+    def __str__(self):
+        return self.nombre

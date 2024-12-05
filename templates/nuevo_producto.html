@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Nuevo Producto{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        {% if messages %}
+            <div class="alert alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Nuevo Producto</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-6 m-auto">
+                <form action="" method="post" autocomplete="off">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="codigo">Código Producto</label>
+                        <input type="text" placeholder="Ingrese código del producto" name="codigo" id="codigo" class="form-control" value="{{ request.POST.codigo }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="producto">Nombre Producto</label>
+                        <input type="text" placeholder="Ingrese nombre del producto" name="producto" id="producto" class="form-control" value="{{ request.POST.producto }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="precio">Precio</label>
+                        <input type="text" placeholder="Ingrese precio" class="form-control" name="precio" id="precio" value="{{ request.POST.precio }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stock">Stock</label>
+                        <input type="number" placeholder="Ingrese cantidad en stock" class="form-control" name="stock" id="stock" value="{{ request.POST.stock }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select name="estado" id="estado" class="form-control">
+                            <option value="activo" {% if request.POST.estado == 'activo' %}selected{% endif %}>Activo</option>
+                            <option value="inactivo" {% if request.POST.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoría</label>
+                        <select name="categoria" id="categoria" class="form-control">
+                            <option value="">Selecciona una categoría</option>
+                            {% for categoria in categorias %}
+                                <option value="{{ categoria.id }}" {% if categoria.id == request.POST.categoria %}selected{% endif %}>{{ categoria.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <input type="submit" value="Guardar Producto" class="btn btn-primary">
+                    <a href="{% url 'productos' %}" class="btn btn-primary">Regresar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Categorías{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Mostrar mensajes de éxito o error -->
+        {% if messages %}
+            <div class="alert alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Botón para abrir el modal de nueva categoría -->
+        <button class="btn btn-primary mb-4" type="button" data-toggle="modal" data-target="#nueva_categoria">
+            <i class="fas fa-plus"></i> Nueva Categoría
+        </button>
+
+        <!-- Modal para Nueva Categoría -->
+        <div id="nueva_categoria" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-titulo" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="modal-titulo">Nueva Categoría</h5>
+                        <button type="button" class="close py-2 px-2" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'nueva_categoria' %}" autocomplete="off">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="codigo">Código de Categoría</label>
+                                <input type="number" placeholder="Ingrese código de categoría" name="codigo" id="codigo" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="nombre">Nombre</label>
+                                <input type="text" placeholder="Nombre de la categoría" name="nombre" id="nombre" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="estado">Estado</label>
+                                <select name="estado" id="estado" class="form-control" required>
+                                    <option value="activo">Activo</option>
+                                    <option value="inactivo">Inactivo</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary py-2 px-2" name="crear_categoria">Registrar</button>
+                            <button type="button" class="btn btn-secondary py-2 px-2" data-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
