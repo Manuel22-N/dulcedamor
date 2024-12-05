@@ -37,16 +37,31 @@
                                             </ul>
                                         </div>
                                     {% endif %}
-                                    <!-- Formulario actualizado para Django -->
-                                    <form method="POST" action="{% url 'user_login' %}">
+                                    <form method="POST" action="{% url 'user_login' %}" id="login-form">
                                         {% csrf_token %}
                                         <div class="form-group">
                                             <label class="small mb-1" for="username"><i class="fas fa-user"></i> Usuario</label>
-                                            <input class="form-control py-4" id="username" name="username" type="text" placeholder="Ingrese usuario" required />
+                                            <input 
+                                                class="form-control py-4" 
+                                                id="username" 
+                                                name="username" 
+                                                type="text" 
+                                                placeholder="Ingrese usuario" 
+                                                autocomplete="username" 
+                                                required 
+                                            />
                                         </div>
                                         <div class="form-group">
                                             <label class="small mb-1" for="password"><i class="fas fa-key"></i> Contraseña</label>
-                                            <input class="form-control py-4" id="password" name="password" type="password" placeholder="Ingrese Contraseña" required />
+                                            <input 
+                                                class="form-control py-4" 
+                                                id="password" 
+                                                name="password" 
+                                                type="password" 
+                                                placeholder="Ingrese Contraseña" 
+                                                autocomplete="current-password" 
+                                                required 
+                                            />
                                         </div>
 
                                         <div class="form-group text-center">
