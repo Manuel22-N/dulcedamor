@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}Actualizar Producto{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <!-- Mostrar mensajes de éxito o error -->
+        {% if messages %}
+            <div class="alert alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Título de la página -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Actualizar Producto</h1>
+        </div>
+
+        <!-- Formulario de búsqueda de producto por nombre -->
+        <div class="row">
+            <div class="col-lg-6 m-auto">
+                <form action="{% url 'actualizar_producto' %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="codigo">Buscar Producto por Código</label>
+                        <input type="text" class="form-control" placeholder="Ingrese código del producto" name="codigo" required>
+                    </div>
+                    <input type="submit" value="Buscar" class="btn btn-primary">
+                </form>
+                
+            </div>
+        </div>
+
+        {% if producto %}
+            <form action="{% url 'actualizar_producto' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="producto_id" value="{{ producto.id }}">
+
+                <div class="form-group">
+                    <label for="nombre">Nombre del Producto</label>
+                    <input type="text" class="form-control" name="nombre" value="{{ producto.nombre }}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="nuevo_precio">Nuevo Precio</label>
+                    <input type="number" class="form-control" value="{{ producto.precio }}" name="precio" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nueva_cantidad">Nueva Cantidad de Productos Disponibles</label>
+                    <input type="number" class="form-control" value="{{ producto.stock }}" name="stock" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select name="estado" id="estado" class="form-control">
+                        <option value="activo" {% if producto.estado == 'activo' %}selected{% endif %}>Activo</option>
+                        <option value="inactivo" {% if producto.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <a href="{% url 'productos' %}" class="btn btn-danger">Regresar</a> <!-- Redirige a la lista de productos -->
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

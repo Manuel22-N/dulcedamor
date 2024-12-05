@@ -19,6 +19,12 @@ from django.urls import path, include
 from dulcedamor.views.dashboard_views import dashboard_view
 from dulcedamor.views.configuration_views import configuration_view
 from dulcedamor.views.usuarios_views import gestionar_usuarios, editar_usuario
+from dulcedamor.views.categorias_views import categorias
+from dulcedamor.views.nueva_categoria import nueva_categoria
+from dulcedamor.views.editar_categorias import editar_categorias
+from dulcedamor.views.nuevo_producto import nuevo_producto
+from dulcedamor.views.productos import productos
+from dulcedamor.views.actualizar_producto import actualizar_producto
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +34,10 @@ urlpatterns = [
     # Rutas para gestionar usuarios
     path('gestionar-usuarios/', gestionar_usuarios, name='gestionar_usuarios'),
     path('gestionar-usuarios/editar/<int:usuario_id>/', editar_usuario, name='editar_usuario'),
+    path('categorias/', categorias, name='categorias'),
+    path('nueva-categoria/', nueva_categoria, name='nueva_categoria'),
+    path('editar-categoria/', editar_categorias, name='editar_categorias'),
+    path('nuevo-producto/', nuevo_producto, name='nuevo_producto'),
+    path('productos/',productos, name='productos'),
+    path('actualizar-producto/',actualizar_producto, name='actualizar_producto'),
 ]
