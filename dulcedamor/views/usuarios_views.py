@@ -47,6 +47,11 @@ def gestionar_usuarios(request):
             rol_id = request.POST.get('rol')
             password = request.POST.get('password')
 
+             # Validar si el correo ya existe
+            if CustomUser.objects.filter(email=correo).exists():
+                messages.error(request, 'El correo electrónico ya está registrado.')
+                return redirect('gestionar_usuarios')
+
             # Validar rol
             try:
                 rol = Role.objects.get(id=rol_id)
@@ -110,6 +115,11 @@ def editar_usuario(request, usuario_id):
         correo = request.POST.get('correo')
         celular = request.POST.get('celular')
         rol_id = request.POST.get('rol')
+
+        # Validar si el correo ya está registrado por otro usuario
+        if CustomUser.objects.filter(email=correo).exclude(id=usuario.id).exists():
+            messages.error(request, 'El correo electrónico ya está en uso por otro usuario.')
+            return redirect('editar_usuario', usuario_id=usuario.id)
 
         # Validar rol
         try:
