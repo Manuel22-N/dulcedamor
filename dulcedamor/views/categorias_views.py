@@ -1,98 +1,63 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from users.models import Categoria
-from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q  # Importar Q para realizar búsquedas complejas
+from django.utils.translation import activate
 
 @login_required(login_url='user_login')
 def categorias(request):
-    categorias = Categoria.objects.all()  # Obtiene todas las categorías desde la base de datos
-    return render(request, 'categorias.html', {'categorias': categorias})
-
-
-@csrf_exempt
-def nueva_categorias(request):
-    # Recuperar categorías
+    activate('es')
+    
+    # Obtener el valor de búsqueda desde el parámetro GET
+    query = request.GET.get('search', '')  # Obtén el parámetro de búsqueda
+    
+    # Filtrar las categorías si hay un valor en la búsqueda
     categorias = Categoria.objects.all()
 
+    if query:
+        categorias = categorias.filter(
+            Q(codigo__icontains=query) | Q(nombre__icontains=query)
+        )
+    
     if request.method == 'POST':
-        # Si el formulario es para crear una nueva categoría
-        if 'crear_categoria' in request.POST:
-            codigo = request.POST.get('codigo')
-            nombre_categoria = request.POST.get('nombre de categoria')
-            estado = request.POST.get('Estado')
+        if 'eliminar_categoria' in request.POST:
+            # Eliminar categoría
+            categoria_id = request.POST.get('categoria_id')  # Obtén el ID de la categoría a eliminar
+            categoria = get_object_or_404(Categoria, id=categoria_id)  # Recupera la categoría
+            categoria.delete()  # Elimina la categoría
+            messages.success(request, 'Categoría eliminada con éxito.')
+        
+        elif 'crear_categoria' in request.POST:
+            # Crear nueva categoría
+            codigo = request.POST.get('codigo')  # Campo "codigo"
+            nombre_categoria = request.POST.get('nombre')  # Campo "nombre"
+            estado = request.POST.get('estado')  # Campo "estado"
 
-            # Validación simple para el estado
+            # Validación: asegurarse de que 'codigo' no sea vacío
+            if not codigo:
+                messages.error(request, 'El código de la categoría es obligatorio.')
+                return redirect('categorias')  # Redirigir para mantener los mensajes
+
+            # Validación para el estado
             if estado not in ['activo', 'inactivo']:
-                # Mensaje de error si el estado no es válido
-                return redirect('categorias')
+                messages.error(request, 'El estado debe ser "activo" o "inactivo".')
+                return redirect('categorias')  # Redirigir para mantener los mensajes
 
-            # Crear la nueva categoría
-            nueva_categoria = Categoria(
-                codigo=codigo,
-                nombre=nombre_categoria,
-                estado=estado,
-            )
-            nueva_categoria.save()
-            # Aquí eliminamos el mensaje de éxito de categoría registrada
+            try:
+                # Crear la nueva categoría
+                nueva_categoria = Categoria(
+                    codigo=codigo,
+                    nombre=nombre_categoria,
+                    estado=estado,
+                )
+                nueva_categoria.save()
+                messages.success(request, 'Categoría registrada con éxito.')
+            except Exception as e:
+                messages.error(request, 'No se pudo crear la categoría. Intenta de nuevo.')
 
-        # Si el formulario es para eliminar una categoría
-        elif 'eliminar_categoria' in request.POST:
-            categoria_id = request.POST.get('categoria_id')
-            categoria = get_object_or_404(Categoria, id=categoria_id)
-            categoria.delete()
-            # Aquí eliminamos el mensaje de éxito de categoría eliminada
+        # Redirigir para evitar resubir el formulario si se recarga la página
+        return redirect('categorias')
 
+    # Si la solicitud es GET, simplemente se muestra la página con las categorías existentes
     return render(request, 'categorias.html', {'categorias': categorias})
-
-
-@login_required(login_url='user_login')
-def categorias(request):
-    categorias = Categoria.objects.all()  # Obtiene todas las categorías desde la base de datos
-
-    if request.method == 'POST' and 'eliminar_categoria' in request.POST:
-        categoria_id = request.POST.get('categoria_id')  # Obtén el ID de la categoría a eliminar
-        categoria = get_object_or_404(Categoria, id=categoria_id)  # Recupera la categoría
-
-        # Elimina la categoría, pero no mostramos el mensaje de éxito
-        categoria.delete()
-
-        return redirect('categorias')  # Redirige a la misma página después de la eliminación
-
-    return render(request, 'categorias.html', {'categorias': categorias})
-
-
-@csrf_exempt
-def nueva_categoria(request):
-    if request.method == 'POST':
-        # Si el formulario es para crear una nueva categoría
-        if 'crear_categoria' in request.POST:
-            codigo = request.POST.get('dni')  # El campo 'dni' en el formulario
-            nombre_categoria = request.POST.get('nombre')
-            estado = request.POST.get('estado')
-
-            # Validación simple para el estado
-            if estado not in ['activo', 'inactivo']:
-                # Mensaje de error si el estado no es válido
-                return redirect('nueva_categoria')
-
-            # Crear la nueva categoría
-            nueva_categoria = Categoria(
-                codigo=codigo,
-                nombre=nombre_categoria,
-                estado=estado,
-            )
-            nueva_categoria.save()
-            # Aquí eliminamos el mensaje de éxito de categoría registrada
-
-            # Redirigir después de guardar
-            return redirect('categoria')  # O redirigir a donde desees
-
-    return render(request, 'nueva_categoria.html')
-
-
-
-
-
-
-
-
