@@ -80,6 +80,8 @@ class Producto(models.Model):
 
     # Relación con la categoría (mantienes la clave foránea)
     nombre_categoria = models.ForeignKey(Categoria, on_delete=models.SET_NULL, null=True, blank=True)
+    imagen = models.ImageField(upload_to='productos/')  # Este campo es para la imagen
+    
     
     class Meta:
         db_table = 'productos'

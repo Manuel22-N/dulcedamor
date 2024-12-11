@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'dulcedamor.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Usamos MySQL
-        'NAME': 'dbdulcedamor',                # Nombre de la base de datos
+        'NAME': 'inventario_dulce',                # Nombre de la base de datos
         'USER': 'root',                        # Usuario de MySQL
-        'PASSWORD': 'Mrvg2906',                # Contraseña de MySQL
+        'PASSWORD': '123456',                # Contraseña de MySQL
         'HOST': 'localhost',                   # Generalmente es localhost
-        'PORT': '3306',                        # El puerto por defecto para MySQL
+        'PORT': '33065',                        # El puerto por defecto para MySQL
     }
 }
 
@@ -155,3 +155,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

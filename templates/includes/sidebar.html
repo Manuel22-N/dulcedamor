@@ -24,23 +24,16 @@
         <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{% url 'nuevo_producto' %}">Nuevo Producto</a>
-                <a class="collapse-item" href="{% url 'actualizar_producto' %}">Actualizar Productos</a>
                 <a class="collapse-item" href="{% url 'productos' %}">Productos</a>
             </div>
         </div>
     </li>
     
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseClientes" aria-expanded="true" aria-controls="collapseUtilities">
+        <a class="nav-link collapsed" href="{% url 'categorias' %}" >
             <i class="fas fa-users"></i>
             <span>Categorías</span>
         </a>
-        <div id="collapseClientes" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{% url 'editar_categorias'%}">Editar Categoría</a>
-                <a class="collapse-item" href="{% url 'categorias' %}">Categorías</a>
-            </div>
-        </div>
     </li>
     
     <li class="nav-item">

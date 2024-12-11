@@ -1,52 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}Categoria{% endblock %}
+{% block title %}Editar Categoría{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Mostrar mensajes de éxito o error -->
-    {% if messages %}
-        <div class="alert alert-dismissible fade show" role="alert">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+    <div class="container mt-4">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">Editar Categoría</h1>
         </div>
-    {% endif %}
-    
-    <div class="row">
-        <div class="col-lg-6 m-auto">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
-                    Modificar Categoría
-                </div>
-                <div class="card-body">
-                    <form method="POST">
-                        {% csrf_token %}
-                        <div class="form-group">
-                            <label for="codigoCategoria">Código:</label>
-                            <input type="text" class="form-control" id="codigoCategoria" name="codigoCategoria" required>
-                        </div>
-                    
-                        <div class="form-group">
-                            <label for="nombreCategoria">Nombre:</label>
-                            <input type="text" class="form-control" id="nombreCategoria" name="nombreCategoria" required>
-                        </div>
-                    
-                        <div class="form-group">
-                            <label for="estado">Estado:</label>
-                            <select class="form-control" name="estado" id="estado" required>
-                                <option value="activo">Activo</option>
-                                <option value="inactivo">Inactivo</option>
-                            </select>
-                        </div>
-                    
-                        <button type="submit" class="btn btn-primary">Actualizar Categoría</button>
-                    </form>
-                </div>
+
+        <!-- Mostrar mensajes de éxito o error -->
+        {% if messages %}
+            <div class="alert alert-dismissible fade show" role="alert">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             </div>
-        </div>
+        {% endif %}
+
+        <!-- Formulario de edición de categoría -->
+        <form method="post" action="{% url 'editar_categorias' categoria.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nombreCategoria">Nombre de la categoría</label>
+                <input type="text" name="nombre" id="nombreCategoria" class="form-control" value="{{ categoria.nombre }}" required>
+            </div>
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <select name="estado" id="estado" class="form-control" required>
+                    <option value="activo" {% if categoria.estado == 'activo' %} selected {% endif %}>Activo</option>
+                    <option value="inactivo" {% if categoria.estado == 'inactivo' %} selected {% endif %}>Inactivo</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+        </form>
+        
     </div>
-</div>
 {% endblock %}
