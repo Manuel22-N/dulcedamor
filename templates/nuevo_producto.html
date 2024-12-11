@@ -20,7 +20,8 @@
 
         <div class="row">
             <div class="col-lg-6 m-auto">
-                <form action="" method="post" autocomplete="off">
+                <!-- Se añadió enctype="multipart/form-data" para permitir carga de archivos -->
+                <form action="" method="post" autocomplete="off" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="codigo">Código Producto</label>
@@ -58,6 +59,12 @@
                                 <option value="{{ categoria.id }}" {% if categoria.id == request.POST.categoria %}selected{% endif %}>{{ categoria.nombre }}</option>
                             {% endfor %}
                         </select>
+                    </div>
+
+                    <!-- Campo para subir imagen -->
+                    <div class="form-group">
+                        <label for="imagen">Suba imagen del producto</label>
+                        <input type="file" name="imagen" id="imagen" class="form-control">
                     </div>
 
                     <input type="submit" value="Guardar Producto" class="btn btn-primary">

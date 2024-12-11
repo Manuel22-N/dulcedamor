@@ -1,17 +1,22 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from users.models import Categoria
 
-def editar_categorias(request):
+@login_required(login_url='user_login')
+def editar_categorias(request, id):
+    categoria = get_object_or_404(Categoria, id=id)
+
     if request.method == 'POST':
-        # Obtener el código de la categoría desde el formulario
-        codigo_categoria = request.POST.get('codigoCategoria')
-
-        # Buscar la categoría con ese código
-        categoria = get_object_or_404(Categoria, codigo=codigo_categoria)
-
-        # Obtener los datos del formulario para el nombre y estado
-        nombre_categoria = request.POST.get('nombreCategoria')
+        # Obtener los valores del formulario
+        nombre_categoria = request.POST.get('nombre')  # Asegúrate de usar 'nombre' aquí
         estado_categoria = request.POST.get('estado')
+
+        # Verificar que el campo 'nombre' no esté vacío
+        if not nombre_categoria:
+            return render(request, 'editar_categorias.html', {
+                'categoria': categoria,
+                'error': 'El nombre de la categoría es obligatorio.'
+            })
 
         # Actualizar los valores de la categoría
         categoria.nombre = nombre_categoria
@@ -19,7 +24,6 @@ def editar_categorias(request):
         categoria.save()
 
         # Redirigir después de la actualización
-        return redirect('categorias')  # Cambia esto según la vista que desees
+        return redirect('categorias')
 
-    # Si no es un POST, mostrar la página para editar
-    return render(request, 'editar_categorias.html')
+    return render(request, 'editar_categorias.html', {'categoria': categoria})

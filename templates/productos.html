@@ -8,10 +8,17 @@
         <h1 class="h3 mb-0 text-gray-800">Gestión de Productos</h1>
     </div>
 
-    <!-- Mensajes de alerta (si los hay) -->
-    {% if mensaje %}
-    <div class="alert alert-success" role="alert">
-        {{ mensaje }}
+    <!-- Mostrar mensajes de éxito o error -->
+    {% if messages %}
+    <div id="message-alert" class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
     </div>
     {% endif %}
 
@@ -20,11 +27,11 @@
             <div class="dataTables_length" id="tbl_length">
                 <label class="d-flex align-items-center">
                     Mostrar
-                    <select name="tbl_length" aria-controls="tbl" class="custom-select custom-select-sm form-control form-control-sm mx-2">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
+                    <select name="tbl_length" aria-controls="tbl" class="custom-select custom-select-sm form-control form-control-sm mx-2" onchange="this.form.submit()">
+                        <option value="10" {% if request.GET.tbl_length == '10' %}selected{% endif %}>10</option>
+                        <option value="25" {% if request.GET.tbl_length == '25' %}selected{% endif %}>25</option>
+                        <option value="50" {% if request.GET.tbl_length == '50' %}selected{% endif %}>50</option>
+                        <option value="100" {% if request.GET.tbl_length == '100' %}selected{% endif %}>100</option>
                     </select>
                     Entradas
                 </label>
@@ -46,6 +53,7 @@
             <thead class="thead-dark">
                 <tr>
                     <th>#</th>
+                    <th>Imagen</th>  <!-- Nueva columna para la imagen -->
                     <th>Código</th>
                     <th>Producto</th>
                     <th>Precio</th>
@@ -59,6 +67,16 @@
                 {% for producto in productos %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
+                    
+                    <!-- Columna para la imagen -->
+                    <td>
+                        {% if producto.imagen %}
+                            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" width="50" height="50">
+                        {% else %}
+                            <span class="text-muted">Sin imagen</span>
+                        {% endif %}
+                    </td>
+
                     <td>{{ producto.codigo }}</td>
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.precio }}</td>
@@ -78,19 +96,21 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="{% url 'actualizar_producto' %}" class="btn btn-success"><i class="fas fa-edit"></i></a>
+                        <a href="{% url 'actualizar_producto' producto.id %}?codigo={{ producto.codigo }}" class="btn btn-success">
+                            <i class="fas fa-edit"></i>
+                        </a>                        
                         <form action="{% url 'productos' %}" method="post" class="d-inline">
                             {% csrf_token %}
                             <input type="hidden" name="producto" value="{{ producto.id }}">
                             <button class="btn btn-danger btn-sm" type="submit" name="eliminar_producto">
-                                <i class="fas fa-trash-alt"></i> Eliminar
+                                <i class="fas fa-trash-alt"></i> 
                             </button>
                         </form>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="8" class="text-center">No hay productos registrados.</td>
+                    <td colspan="9" class="text-center">No hay productos registrados.</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -159,6 +179,14 @@
                 }
             });
         });
+
+        // Agregar el setTimeout para ocultar las alertas después de 6 segundos
+        setTimeout(function() {
+            var alertBox = document.getElementById('message-alert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 6000);
     });
 </script>
 

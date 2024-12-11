@@ -4,6 +4,7 @@ from django.contrib import messages
 from users.models import Categoria
 from django.db.models import Q  # Importar Q para realizar búsquedas complejas
 from django.utils.translation import activate
+from django.core.paginator import Paginator  # Importar Paginator
 
 @login_required(login_url='user_login')
 def categorias(request):
@@ -12,6 +13,9 @@ def categorias(request):
     # Obtener el valor de búsqueda desde el parámetro GET
     query = request.GET.get('search', '')  # Obtén el parámetro de búsqueda
     
+    # Obtener el valor de 'tbl_length' para saber cuántos elementos mostrar por página
+    tbl_length = int(request.GET.get('tbl_length', 10))  # Valor por defecto es 10
+    
     # Filtrar las categorías si hay un valor en la búsqueda
     categorias = Categoria.objects.all()
 
@@ -19,7 +23,13 @@ def categorias(request):
         categorias = categorias.filter(
             Q(codigo__icontains=query) | Q(nombre__icontains=query)
         )
-    
+
+    # Paginación
+    paginator = Paginator(categorias, tbl_length)  # Paginación según el valor de 'tbl_length'
+    page = request.GET.get('page')  # Obtener la página actual desde los parámetros GET
+    categorias_paginadas = paginator.get_page(page)  # Obtener las categorías para la página actual
+
+    # Procesar solicitudes POST (eliminar o crear categoría)
     if request.method == 'POST':
         if 'eliminar_categoria' in request.POST:
             # Eliminar categoría
@@ -60,4 +70,8 @@ def categorias(request):
         return redirect('categorias')
 
     # Si la solicitud es GET, simplemente se muestra la página con las categorías existentes
-    return render(request, 'categorias.html', {'categorias': categorias})
+    return render(request, 'categorias.html', {
+        'categorias': categorias_paginadas,
+        'query': query,
+        'tbl_length': tbl_length  # Pasar el valor de 'tbl_length' a la plantilla
+    })

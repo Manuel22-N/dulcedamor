@@ -20,10 +20,11 @@
             <h1 class="h3 mb-0 text-gray-800">Actualizar Producto</h1>
         </div>
 
-        <!-- Formulario de búsqueda de producto por nombre -->
+        <!-- Formulario de búsqueda de producto por código -->
         <div class="row">
             <div class="col-lg-6 m-auto">
-                <form action="{% url 'actualizar_producto' %}" method="post">
+                <form action="{% url 'actualizar_producto' producto.id %}" method="post">
+
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="codigo">Buscar Producto por Código</label>
@@ -31,12 +32,13 @@
                     </div>
                     <input type="submit" value="Buscar" class="btn btn-primary">
                 </form>
-                
             </div>
         </div>
 
         {% if producto %}
-            <form action="{% url 'actualizar_producto' %}" method="post">
+            <!-- Formulario para actualizar producto -->
+            <form action="{% url 'actualizar_producto' producto.id %}" method="post">
+
                 {% csrf_token %}
                 <input type="hidden" name="producto_id" value="{{ producto.id }}">
 
@@ -46,12 +48,17 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="nuevo_precio">Nuevo Precio</label>
+                    <label for="codigo">Código del Producto</label>
+                    <input type="text" class="form-control" name="codigo" value="{{ producto.codigo }}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio">Nuevo Precio</label>
                     <input type="number" class="form-control" value="{{ producto.precio }}" name="precio" step="0.01" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="nueva_cantidad">Nueva Cantidad de Productos Disponibles</label>
+                    <label for="stock">Nueva Cantidad de Productos Disponibles</label>
                     <input type="number" class="form-control" value="{{ producto.stock }}" name="stock" min="0" required>
                 </div>
 
