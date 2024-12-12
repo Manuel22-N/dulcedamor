@@ -5,15 +5,18 @@
 {% block content %}
     <div class="container mt-4">
         <div class="d-sm-flex align-items-center justify-content-between mb-4">
-            <h1 class="h3 mb-0 text-gray-800">Gestión de Categorias</h1>
+            <h1 class="h3 mb-0 text-gray-800">Gestión de Categorías</h1>
         </div>
 
         <!-- Mostrar mensajes de éxito o error -->
         {% if messages %}
-            <div class="alert alert-dismissible fade show" role="alert">
+            <div id="message-alert" class="container mt-3">
                 {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                         {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 {% endfor %}
             </div>
@@ -24,33 +27,119 @@
             <i class="fas fa-plus"></i> Nueva Categoría
         </button>
 
-         <!-- Mostrar y buscar entradas debajo del botón de agregar -->
-    <div class="row mb-3 align-items-center">
-        <div class="col-md-6 d-flex align-items-center">
-            <div class="dataTables_length" id="tbl_length">
-                <label class="d-flex align-items-center">
-                    Mostrar
-                    <select name="tbl_length" aria-controls="tbl" class="custom-select custom-select-sm form-control form-control-sm mx-2">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    Entradas
-                </label>
+        <div class="row mb-3 align-items-center">
+            <div class="col-md-6 d-flex align-items-center">
+                <div class="dataTables_length" id="tbl_length">
+                    <label class="d-flex align-items-center">
+                        Mostrar
+                        <select name="tbl_length" aria-controls="tbl" class="custom-select custom-select-sm form-control form-control-sm mx-2" onchange="this.form.submit()">
+                            <option value="10" {% if tbl_length == 10 %}selected{% endif %}>10</option>
+                            <option value="25" {% if tbl_length == 25 %}selected{% endif %}>25</option>
+                            <option value="50" {% if tbl_length == 50 %}selected{% endif %}>50</option>
+                            <option value="100" {% if tbl_length == 100 %}selected{% endif %}>100</option>
+                        </select>
+                        Entradas
+                    </label>
+                </div>
             </div>
-        </div>
-        <div class="col-md-6 d-flex justify-content-end">
-            <div id="tbl_filter" class="dataTables_filter">
-                <form method="get" action="{% url 'categorias' %}">
+            <div class="col-md-6 d-flex justify-content-end">
+                <div id="tbl_filter" class="dataTables_filter">
                     <label class="d-flex align-items-center">
                         Buscar:
-                        <input type="search" name="search" class="form-control form-control-sm ml-2" placeholder="" aria-controls="tbl" id="search-bar">
+                        <input type="search" id="search-bar" class="form-control form-control-sm ml-2" placeholder="Buscar por código o nombre" aria-controls="tbl">
                     </label>
-                </form>
+                </div>
             </div>
         </div>
-        
+
+        <!-- Tabla que lista las categorías -->
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Código</th>
+                        <th>Nombre de Categoría</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for categoria in categorias %}
+                    <tr data-codigo="{{ categoria.codigo }}" data-nombre="{{ categoria.nombre }}">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ categoria.codigo }}</td>
+                        <td>{{ categoria.nombre }}</td>
+                        <td>
+                            {% if categoria.estado == 'activo' %}
+                                <span class="badge badge-pill badge-success">Activo</span>
+                            {% else %}
+                                <span class="badge badge-pill badge-danger">Inactivo</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <!-- Redirige a la página de edición pasando el id de la categoría -->
+                            <a href="{% url 'editar_categorias' categoria.id %}" class="btn btn-success">
+                                <i class="fas fa-edit"></i>
+                            </a>
+
+                            <!-- Formulario para eliminar la categoría -->
+                            <form action="{% url 'categorias' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="categoria_id" value="{{ categoria.id }}">
+                                <button class="btn btn-danger btn-sm" type="submit" name="eliminar_categoria">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No hay categorías registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Información y paginación después de la tabla -->
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <div class="dataTables_info" id="tbl_info" role="status" aria-live="polite">
+                    Mostrar {{ categorias.start_index }} a {{ categorias.end_index }} de {{ categorias.count }} entradas
+                </div>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+                <div class="dataTables_paginate paging_simple_numbers" id="tbl_paginate">
+                    <ul class="pagination">
+                        {% if categorias.has_previous %}
+                            <li class="paginate_button page-item previous">
+                                <a href="?page=1&search={{ query }}" aria-controls="tbl" class="page-link">Primera</a>
+                            </li>
+                            <li class="paginate_button page-item previous">
+                                <a href="?page={{ categorias.previous_page_number }}&search={{ query }}" aria-controls="tbl" class="page-link">Anterior</a>
+                            </li>
+                        {% else %}
+                            <li class="paginate_button page-item previous disabled">
+                                <a href="#" aria-controls="tbl" class="page-link">Anterior</a>
+                            </li>
+                        {% endif %}
+                        <li class="paginate_button page-item active">
+                            <a href="#" class="page-link">{{ categorias.number }}</a>
+                        </li>
+                        {% if categorias.has_next %}
+                            <li class="paginate_button page-item next">
+                                <a href="?page={{ categorias.next_page_number }}&search={{ query }}" aria-controls="tbl" class="page-link">Siguiente</a>
+                            </li>
+                        {% else %}
+                            <li class="paginate_button page-item next disabled">
+                                <a href="#" aria-controls="tbl" class="page-link">Siguiente</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal para Nueva Categoría -->
         <div id="nueva_categoria" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-titulo" aria-hidden="true">
@@ -88,100 +177,40 @@
             </div>
         </div>
 
-        <!-- Tabla que lista las categorías -->
-        <div class="table-responsive">
-            <table class="table table-striped table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Código</th>
-                        <th>Nombre de Categoría</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for categoria in categorias %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ categoria.codigo }}</td>
-                        <td>{{ categoria.nombre }}</td>
-                        <td>
-                            {% if categoria.estado == 'activo' %}
-                                <span class="badge badge-pill badge-success">Activo</span>
-                            {% else %}
-                                <span class="badge badge-pill badge-danger">Inactivo</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="{% url 'editar_categorias' %}" class="btn btn-success"><i class="fas fa-edit"></i></a>
-                            <form action="{% url 'categorias' %}" method="post" class="d-inline">
-                                {% csrf_token %}
-                                <input type="hidden" name="categoria_id" value="{{ categoria.id }}">
-                                <button class="btn btn-danger btn-sm" type="submit" name="eliminar_categoria">
-                                    <i class="fas fa-trash-alt"></i> Eliminar
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="5" class="text-center">No hay categorías registradas.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Información y paginación después de la tabla -->
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <div class="dataTables_info" id="tbl_info" role="status" aria-live="polite">
-                Mostrar {{ categorias.start_index }} a {{ categorias.end_index }} de {{ categorias.paginator.count }} entradas
-            </div>
-        </div>
-        <div class="col-md-6 d-flex justify-content-end">
-            <div class="dataTables_paginate paging_simple_numbers" id="tbl_paginate">
-                <ul class="pagination">
-                    <li class="paginate_button page-item previous disabled" id="tbl_previous">
-                        <a href="#" aria-controls="tbl" data-dt-idx="0" tabindex="0" class="page-link">Anterior</a>
-                    </li>
-                    <li class="paginate_button page-item active">
-                        <a href="#" aria-controls="tbl" data-dt-idx="1" tabindex="0" class="page-link">1</a>
-                    </li>
-                    <li class="paginate_button page-item next disabled" id="tbl_next">
-                        <a href="#" aria-controls="tbl" data-dt-idx="2" tabindex="0" class="page-link">Siguiente</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    
     </div>
+
+    <!-- Script para ocultar los mensajes después de 6 segundos -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchInput = document.getElementById('search-bar');
-            const table = document.querySelector('table');
-            const rows = table.querySelectorAll('tbody tr');
+        setTimeout(function() {
+            var alertBox = document.getElementById('message-alert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 6000);
+    </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('search-bar');
+        const table = document.querySelector('table');
+        const rows = table.querySelectorAll('tbody tr');
+        
+        searchInput.addEventListener('input', function() {
+            const query = searchInput.value.toLowerCase();
             
-            searchInput.addEventListener('input', function() {
-                const query = searchInput.value.toLowerCase();
+            rows.forEach(row => {
+                const codigo = row.cells[1].textContent.toLowerCase();
+                const nombre = row.cells[2].textContent.toLowerCase();
                 
-                rows.forEach(row => {
-                    const codigo = row.cells[1].textContent.toLowerCase();
-                    const nombre = row.cells[2].textContent.toLowerCase();
-                    
-                    // Verificar si el código o el nombre contienen la consulta
-                    if (codigo.includes(query) || nombre.includes(query)) {
-                        row.style.display = '';  // Mostrar fila
-                    } else {
-                        row.style.display = 'none';  // Ocultar fila
-                    }
-                });
+                // Verificar si el código o el nombre contienen la consulta
+                if (codigo.includes(query) || nombre.includes(query)) {
+                    row.style.display = '';  // Mostrar fila
+                } else {
+                    row.style.display = 'none';  // Ocultar fila
+                }
             });
         });
-    </script>
-    
-    
+    });
+</script>
 
 {% endblock %}
-

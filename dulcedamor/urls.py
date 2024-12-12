@@ -24,6 +24,9 @@ from dulcedamor.views.editar_categorias import editar_categorias
 from dulcedamor.views.nuevo_producto import nuevo_producto
 from dulcedamor.views.productos import productos
 from dulcedamor.views.actualizar_producto import actualizar_producto
+from django.conf import settings
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,8 +37,11 @@ urlpatterns = [
     path('gestionar-usuarios/', gestionar_usuarios, name='gestionar_usuarios'),
     path('gestionar-usuarios/editar/<int:usuario_id>/', editar_usuario, name='editar_usuario'),
     path('categorias/', categorias, name='categorias'),
-    path('editar-categoria/', editar_categorias, name='editar_categorias'),
+    path('editar-categoria/<int:id>/', editar_categorias, name='editar_categorias'),
     path('nuevo-producto/', nuevo_producto, name='nuevo_producto'),
     path('productos/',productos, name='productos'),
-    path('actualizar-producto/',actualizar_producto, name='actualizar_producto'),
+    path('actualizar-producto/<int:id>/', actualizar_producto, name='actualizar_producto'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

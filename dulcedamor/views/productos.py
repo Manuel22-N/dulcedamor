@@ -19,6 +19,7 @@ def productos(request):
     
     mensaje = None  # Definir un valor por defecto para 'mensaje'
 
+    # Manejo de eliminación de productos
     if request.method == 'POST':
         if 'eliminar_producto' in request.POST:
             producto_id = request.POST.get('producto')
@@ -31,9 +32,17 @@ def productos(request):
 
             return redirect('productos')  # Redirigir a la misma página después de eliminar
     
+    # Obtener el valor de "tbl_length" desde el formulario (cuántos productos mostrar por página)
+    entries_per_page = int(request.GET.get('tbl_length', 10))  # Establecer el valor por defecto a 10
+
     # Paginación
-    paginator = Paginator(productos, 10)  # 10 productos por página
+    paginator = Paginator(productos, entries_per_page)  # Paginación según la cantidad seleccionada
     page = request.GET.get('page')  # Obtener la página actual desde los parámetros GET
     productos_paginados = paginator.get_page(page)
 
-    return render(request, 'productos.html', {'productos': productos_paginados, 'mensaje': mensaje, 'query': query})
+    return render(request, 'productos.html', {
+        'productos': productos_paginados, 
+        'mensaje': mensaje, 
+        'query': query,
+        'tbl_length': entries_per_page  # Pasar el valor de "tbl_length" a la plantilla
+    })

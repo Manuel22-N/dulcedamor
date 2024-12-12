@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from users.models import Producto, Categoria
 
+@login_required(login_url='user_login')
 def nuevo_producto(request):
     categorias = Categoria.objects.all()  # Obtener todas las categorías disponibles
 
@@ -13,6 +15,7 @@ def nuevo_producto(request):
         stock = request.POST['stock']
         estado = request.POST['estado']
         categoria_id = request.POST['categoria']  # Obtenemos el id de la categoría seleccionada
+        imagen = request.FILES.get('imagen')  # Obtener la imagen subida
         
         # Verificar que la categoría seleccionada es válida
         try:
@@ -28,7 +31,8 @@ def nuevo_producto(request):
             precio=precio,
             stock=stock,
             estado=estado,
-            nombre_categoria=categoria  # Relacionamos la categoría seleccionada con el producto
+            nombre_categoria=categoria,  # Relacionamos la categoría seleccionada con el producto
+            imagen=imagen  # Guardar la imagen en el campo correspondiente
         )
         producto.save()
 
