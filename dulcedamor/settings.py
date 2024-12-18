@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'dulcedamor.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # Usamos MySQL
-        'NAME': 'inventario_dulce',                # Nombre de la base de datos
+        'NAME': 'dbdulcedamor',                # Nombre de la base de datos
         'USER': 'root',                        # Usuario de MySQL
-        'PASSWORD': '123456',                # Contraseña de MySQL
+        'PASSWORD': 'Mrvg2906',                # Contraseña de MySQL
         'HOST': 'localhost',                   # Generalmente es localhost
-        'PORT': '33065',                        # El puerto por defecto para MySQL
+        'PORT': '3306',                        # El puerto por defecto para MySQL
     }
 }
 

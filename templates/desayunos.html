@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Desayunos{% endblock %}
+
+{% block content %}
+
+<h1>Desayunos</h1>
+
+<!-- Tabla Globos -->
+<div class="container mt-5">
+    <table class="table table-light" id="tbl_globos">
+        <h2>Globos</h2>
+        <thead class="thead-dark">
+            <tr>
+                <th>Buscar</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" class="form-control buscar_producto" data-tabla="globos" placeholder="Código del producto"></td>
+                <td><span class="producto_nombre"></span></td>
+                <td><input type="number" class="form-control cantidad_producto" value="1" min="1" step="1"></td>
+                <td><input type="date" class="form-control fecha_actual" value=""></td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm agregar_fila" data-tabla="globos">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Tabla Empaques -->
+<div class="container mt-5">
+    <table class="table table-light" id="tbl_empaques">
+        <h2>Empaques</h2>
+        <thead class="thead-dark">
+            <tr>
+                <th>Buscar</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" class="form-control buscar_producto" data-tabla="empaques" placeholder="Código del producto"></td>
+                <td><span class="producto_nombre"></span></td>
+                <td><input type="number" class="form-control cantidad_producto" value="1" min="1" step="1"></td>
+                <td><input type="date" class="form-control fecha_actual" value=""></td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm agregar_fila" data-tabla="empaques">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Tabla Alimentos -->
+<div class="container mt-5">
+    <table class="table table-light" id="tbl_alimentos">
+        <h2>Alimentos</h2>
+        <thead class="thead-dark">
+            <tr>
+                <th>Buscar</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" class="form-control buscar_producto" data-tabla="alimentos" placeholder="Código del producto"></td>
+                <td><span class="producto_nombre"></span></td>
+                <td><input type="number" class="form-control cantidad_producto" value="1" min="1" step="1"></td>
+                <td><input type="date" class="form-control fecha_actual" value=""></td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm agregar_fila" data-tabla="alimentos">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Tabla Bases -->
+<div class="container mt-5">
+    <table class="table table-light" id="tbl_bases">
+        <h2>Bases</h2>
+        <thead class="thead-dark">
+            <tr>
+                <th>Buscar</th>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Fecha</th>
+                <th>Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="text" class="form-control buscar_producto" data-tabla="bases" placeholder="Código del producto"></td>
+                <td><span class="producto_nombre"></span></td>
+                <td><input type="number" class="form-control cantidad_producto" value="1" min="1" step="1"></td>
+                <td><input type="date" class="form-control fecha_actual" value=""></td>
+                <td>
+                    <button type="button" class="btn btn-success btn-sm agregar_fila" data-tabla="bases">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- Mensajes dinámicos -->
+<div id="message-container" class="container mt-3"></div>
+<div class="d-flex justify-content-center mt-4">
+    <button id="guardar_desayuno" class="btn btn-primary py-2 px-2">Guardar</button>
+</div>    
+
+<script src="{% static 'js/desayunos.js' %}"></script>
+
+{% endblock %}
