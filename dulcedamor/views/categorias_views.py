@@ -10,6 +10,7 @@ from django.core.paginator import Paginator  # Importar Paginator
 def categorias(request):
     activate('es')
     
+    
     # Obtener el valor de búsqueda desde el parámetro GET
     query = request.GET.get('search', '')  # Obtén el parámetro de búsqueda
     

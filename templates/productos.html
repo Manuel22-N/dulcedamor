@@ -80,7 +80,12 @@
                     <td>{{ producto.codigo }}</td>
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.precio }}</td>
-                    <td>{{ producto.stock }}</td>
+                    <td>{% if producto.stock < 20 %}
+                            <span class="text-danger">{{ producto.stock }}</span>  <!-- Rojo si el stock es menor a 20 -->
+                        {% else %}
+                            {{ producto.stock }}  <!-- De lo contrario, muestra el stock normalmente -->
+                        {% endif %}
+                    </td>
                     <td>
                         {% if producto.estado == 'activo' %}
                             <span class="badge badge-pill badge-success">Activo</span>

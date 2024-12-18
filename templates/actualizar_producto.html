@@ -21,45 +21,32 @@
         </div>
 
         <!-- Formulario de búsqueda de producto por código -->
-        <div class="row">
-            <div class="col-lg-6 m-auto">
-                <form action="{% url 'actualizar_producto' producto.id %}" method="post">
-
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="codigo">Buscar Producto por Código</label>
-                        <input type="text" class="form-control" placeholder="Ingrese código del producto" name="codigo" required>
-                    </div>
-                    <input type="submit" value="Buscar" class="btn btn-primary">
-                </form>
-            </div>
-        </div>
-
+        
         {% if producto %}
             <!-- Formulario para actualizar producto -->
-            <form action="{% url 'actualizar_producto' producto.id %}" method="post">
+            <form action="{% url 'actualizar_producto' producto.id %}" method="post" enctype="multipart/form-data">
 
                 {% csrf_token %}
                 <input type="hidden" name="producto_id" value="{{ producto.id }}">
 
                 <div class="form-group">
                     <label for="nombre">Nombre del Producto</label>
-                    <input type="text" class="form-control" name="nombre" value="{{ producto.nombre }}" readonly>
+                    <input type="text" class="form-control" name="nombre" value="{{ producto.nombre }}">
                 </div>
 
                 <div class="form-group">
                     <label for="codigo">Código del Producto</label>
-                    <input type="text" class="form-control" name="codigo" value="{{ producto.codigo }}" readonly>
+                    <input type="text" class="form-control" name="codigo" value="{{ producto.codigo }}">
                 </div>
 
                 <div class="form-group">
                     <label for="precio">Nuevo Precio</label>
-                    <input type="number" class="form-control" value="{{ producto.precio }}" name="precio" step="0.01" required>
+                    <input type="number" class="form-control" value="{{ producto.precio|default:0 }}" name="precio" step="0.01">
                 </div>
 
                 <div class="form-group">
                     <label for="stock">Nueva Cantidad de Productos Disponibles</label>
-                    <input type="number" class="form-control" value="{{ producto.stock }}" name="stock" min="0" required>
+                    <input type="number" class="form-control" value="{{ producto.stock|default:0 }}" name="stock" min="0">
                 </div>
 
                 <div class="form-group">
@@ -68,6 +55,15 @@
                         <option value="activo" {% if producto.estado == 'activo' %}selected{% endif %}>Activo</option>
                         <option value="inactivo" {% if producto.estado == 'inactivo' %}selected{% endif %}>Inactivo</option>
                     </select>
+                </div>
+
+                <!-- Nuevo campo para cambiar la imagen -->
+                <div class="form-group">
+                    <label for="imagen">Nueva Imagen</label>
+                    <input type="file" class="form-control" name="imagen" accept="image/*">
+                    {% if producto.imagen %}
+                        <p>Imagen Actual: <img src="{{ producto.imagen.url }}" width="100" alt="Imagen actual"></p>
+                    {% endif %}
                 </div>
 
                 <button type="submit" class="btn btn-primary">Actualizar</button>
