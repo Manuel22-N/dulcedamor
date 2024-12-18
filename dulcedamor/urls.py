@@ -26,21 +26,23 @@ from dulcedamor.views.productos import productos
 from dulcedamor.views.actualizar_producto import actualizar_producto
 from django.conf import settings
 from django.conf.urls.static import static
-from django.conf import settings
+from dulcedamor.views.desayunos_views import desayunos, buscar_producto, guardar_desayuno 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('dashboard/', dashboard_view, name='dashboard'),
     path('dashboard/configuration/', configuration_view, name='configuration'),
-    # Rutas para gestionar usuarios
     path('gestionar-usuarios/', gestionar_usuarios, name='gestionar_usuarios'),
     path('gestionar-usuarios/editar/<int:usuario_id>/', editar_usuario, name='editar_usuario'),
     path('categorias/', categorias, name='categorias'),
     path('editar-categoria/<int:id>/', editar_categorias, name='editar_categorias'),
     path('nuevo-producto/', nuevo_producto, name='nuevo_producto'),
-    path('productos/',productos, name='productos'),
+    path('productos/', productos, name='productos'),
     path('actualizar-producto/<int:id>/', actualizar_producto, name='actualizar_producto'),
+    path('desayunos/', desayunos, name='desayunos'),
+    path('desayunos/buscar_producto/<str:codigo>/', buscar_producto, name='buscar_producto'),
+    path('desayunos/guardar/', guardar_desayuno, name='guardar_desayuno'),
 ]
 
 if settings.DEBUG:
