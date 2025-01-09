@@ -26,7 +26,8 @@ from dulcedamor.views.productos import productos
 from dulcedamor.views.actualizar_producto import actualizar_producto
 from django.conf import settings
 from django.conf.urls.static import static
-from dulcedamor.views.desayunos_views import desayunos, buscar_producto, guardar_desayuno 
+from dulcedamor.views.desayunos_views import desayunos, buscar_producto, guardar_desayuno, generar_reporte
+from dulcedamor.views.salidas_views import salidas
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,6 +44,8 @@ urlpatterns = [
     path('desayunos/', desayunos, name='desayunos'),
     path('desayunos/buscar_producto/<str:codigo>/', buscar_producto, name='buscar_producto'),
     path('desayunos/guardar/', guardar_desayuno, name='guardar_desayuno'),
+    path('salidas/', salidas, name='salidas'),
+    path('desayunos/reporte/', generar_reporte, name='reporte')
 ]
 
 if settings.DEBUG:
