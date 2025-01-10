@@ -10,18 +10,32 @@
     <hr class="sidebar-divider my-0">
     <hr class="sidebar-divider">
     <div class="sidebar-heading">Menu</div>
+    
+    <!-- Configuración -->
     <li class="nav-item">
         <a class="nav-link" href="{% url 'configuration' %}">
             <i class="fas fa-fw fa-cog"></i>
             <span>Configuración</span>
         </a>
     </li>
+    
+    <!-- Salidas (Nuevo item) -->
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'salidas' %}">
+            <i class="fas fa-fw fa-sign-out-alt"></i> <!-- Ícono de salida -->
+            <span>Salidas</span>
+        </a>
+    </li>
+
+    <!-- Desayunos -->
     <li class="nav-item">
         <a class="nav-link" href="{% url 'desayunos' %}">
             <i class="fas fa-fw fa-mug-hot"></i>
             <span>Desayunos</span>
         </a>
     </li>
+
+    <!-- Productos -->
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities" aria-expanded="true" aria-controls="collapseUtilities">
             <i class="fas fa-fw fa-wrench"></i>
@@ -35,13 +49,15 @@
         </div>
     </li>
     
+    <!-- Categorías -->
     <li class="nav-item">
-        <a class="nav-link collapsed" href="{% url 'categorias' %}" >
+        <a class="nav-link collapsed" href="{% url 'categorias' %}">
             <i class="fas fa-users"></i>
             <span>Categorías</span>
         </a>
     </li>
     
+    <!-- Usuarios -->
     <li class="nav-item">
         <a class="nav-link" href="{% url 'gestionar_usuarios' %}">
             <i class="fas fa-user"></i>

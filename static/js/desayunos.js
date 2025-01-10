@@ -143,3 +143,56 @@ document.addEventListener("DOMContentLoaded", function () {
         return cookieValue;
     }
 });
+document.getElementById('btn-reporte').addEventListener('click', function() {
+    var fecha = document.getElementById('fecha-reporte').value;
+
+    if (!fecha) {
+        alert("Por favor, selecciona una fecha.");
+        return;
+    }
+
+    // Hacer la solicitud GET para generar el reporte
+    fetch(`/reporte/?fecha=${fecha}`, {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            console.log("Reporte generado:", data.reporte);
+            
+            // Aquí puedes mostrar los datos del reporte
+            // Por ejemplo, agregar los datos a una tabla HTML
+            let reporte = data.reporte;
+            let html = '<table class="table table-bordered"><thead><tr><th>Producto</th><th>Cantidad</th><th>Fecha</th><th>Usuario</th><th>Precio</th></tr></thead><tbody>';
+            reporte.forEach(item => {
+                html += `<tr>
+                            <td>${item.producto}</td>
+                            <td>${item.cantidad}</td>
+                            <td>${item.fecha}</td>
+                            <td>${item.usuario}</td>
+                            <td>${item.precio}</td>
+                        </tr>`;
+            });
+            html += '</tbody></table>';
+
+            // Mostrar el reporte en el contenedor
+            document.getElementById('message-container').innerHTML = html;
+        } else {
+            alert(data.mensaje);
+        }
+    })
+    .catch(error => {
+        console.error("Error al generar el reporte:", error);
+        alert("Hubo un error al generar el reporte.");
+    });
+});
+
+document.getElementById('generar_reporte').addEventListener('click', function () {
+    const fecha = document.getElementById('fecha_reporte').value;  // Obtener fecha seleccionada
+    if (fecha) {
+        // Redirigir a la vista para generar el reporte en PDF
+        window.location.href = `/reporte/?fecha=${fecha}`;
+    } else {
+        alert('Por favor, selecciona una fecha.');
+    }
+});
