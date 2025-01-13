@@ -27,7 +27,8 @@ from dulcedamor.views.actualizar_producto import actualizar_producto
 from django.conf import settings
 from django.conf.urls.static import static
 from dulcedamor.views.desayunos_views import desayunos, buscar_producto, guardar_desayuno, generar_reporte
-from dulcedamor.views.salidas_views import salidas
+from dulcedamor.views.salidas_views import salidas, eliminar_salida, eliminar_por_rango
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -45,6 +46,8 @@ urlpatterns = [
     path('desayunos/buscar_producto/<str:codigo>/', buscar_producto, name='buscar_producto'),
     path('desayunos/guardar/', guardar_desayuno, name='guardar_desayuno'),
     path('salidas/', salidas, name='salidas'),
+    path('salidas/eliminar/<int:salida_id>/', eliminar_salida, name='eliminar_salida'),
+    path('salidas/eliminar_por_rango/', eliminar_por_rango, name='eliminar_por_rango'),
     path('desayunos/reporte/', generar_reporte, name='reporte')
 ]
 
