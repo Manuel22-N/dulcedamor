@@ -29,6 +29,7 @@ from django.conf.urls.static import static
 from dulcedamor.views.desayunos_views import desayunos, buscar_producto, guardar_desayuno, generar_reporte
 from dulcedamor.views.salidas_views import salidas, eliminar_salida, eliminar_por_rango
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),

@@ -25,6 +25,13 @@
     <h3>Crear reporte</h3>
 
     <div class="container">
+
+    <br>
+    <h3>Crear reporte</h3>
+    
+
+    <div class="container mt-5">
+
         <!-- Selector de fecha de inicio y fin -->
         <label for="fecha_inicio">Fecha de inicio:</label>
         <input type="date" id="fecha_inicio" class="form-control mb-3" />
@@ -114,7 +121,7 @@
             // Redirigir al servidor con las fechas como parámetros
             window.location.href = `/desayunos/reporte/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
         });
-
+      
          // Ocultar las alertas
         setTimeout(function() {
             var alertBox = document.getElementById('message-alert');
