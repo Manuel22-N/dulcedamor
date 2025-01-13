@@ -1,26 +1,44 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from users.models import Producto
 
-@login_required(login_url='user_login')
-def actualizar_producto(request, id):  # Asegúrate de que 'id' se pasa como argumento
+def actualizar_producto(request, id):  
     # Buscar el producto por su ID
     producto = get_object_or_404(Producto, id=id)
 
-    # Si se envía un formulario de actualización de producto
     if request.method == 'POST':
-        # Actualizar los campos del producto
-        producto.precio = request.POST.get('precio')
-        producto.stock = request.POST.get('stock')
-        producto.estado = request.POST.get('estado')
+        # Obtener los valores de los campos del formulario
+        nombre = request.POST.get('nombre')
+        codigo = request.POST.get('codigo')
+        precio = request.POST.get('precio')
+        stock = request.POST.get('stock')
+        estado = request.POST.get('estado')
+        imagen = request.FILES.get('imagen')
+        
+        
 
-        # Guardar los cambios
+        # Actualizar los campos solo si se proporcionan valores
+        if nombre:
+            producto.nombre = nombre
+        if codigo:
+            producto.codigo = codigo
+        if precio:
+            producto.precio = precio
+        if stock:
+            producto.stock = stock
+        if estado:
+            producto.estado = estado
+        
+        # Si se ha subido una nueva imagen, actualizar el campo 'imagen'
+        if imagen:
+            producto.imagen = imagen
+        
+        # Guardar los cambios en la base de datos
         producto.save()
 
         # Mensaje de éxito y redirección a la lista de productos
         messages.success(request, "Producto actualizado con éxito.")
         return redirect('productos')  # Redirige a la lista de productos
 
-    # Si es un GET, simplemente mostrar el formulario de actualización
+    # Si es un GET, mostrar el formulario de actualización
     return render(request, 'actualizar_producto.html', {'producto': producto})

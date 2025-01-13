@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Salidas{% endblock %}
+
+{% load tz %}
+
+{% block content %}
+    <h1>Listado de Salidas de Productos</h1>
+    <br>
+    <!-- Mostrar mensajes de éxito o error -->
+    {% if messages %}
+    <div id="message-alert" class="container mt-3">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <h3>Crear reporte</h3>
+
+    <div class="container">
+        <!-- Selector de fecha de inicio y fin -->
+        <label for="fecha_inicio">Fecha de inicio:</label>
+        <input type="date" id="fecha_inicio" class="form-control mb-3" />
+
+        <label for="fecha_fin">Fecha de fin:</label>
+        <input type="date" id="fecha_fin" class="form-control mb-3" />
+    
+        <!-- Botón para generar el reporte -->
+        <button id="generar_reporte" class="btn btn-primary">Generar Reporte</button>
+    </div>
+
+    <div class="mt-5"></div> 
+
+    <h3>Eliminar por rango de fechas</h3>
+    <div class="container"> <!-- Nuevo contenedor -->
+        <form method="POST" action="{% url 'eliminar_por_rango' %}">
+            {% csrf_token %}
+            <label for="fecha_inicio_eliminar">Fecha de inicio:</label>
+            <input type="date" id="fecha_inicio_eliminar" name="fecha_inicio" class="form-control mb-3" />
+
+            <label for="fecha_fin_eliminar">Fecha de fin:</label>
+            <input type="date" id="fecha_fin_eliminar" name="fecha_fin" class="form-control mb-3" />
+
+            <button type="submit" class="btn btn-primary">Eliminar por Rango</button>
+        </form>
+    </div>
+
+    <div class="mt-5"></div> 
+
+    <!-- Tabla de salidas -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>#</th>  <!-- Número de fila -->
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Fecha</th>
+                    <th>Categoría</th>
+                    <th>Usuario</th>
+                    <th>Precio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for salida in salidas %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>  <!-- Número de fila -->
+                    <td>{{ salida.producto }}</td>  <!-- Nombre del producto -->
+                    <td>{{ salida.cantidad }}</td>  <!-- Cantidad de producto -->
+                    <td>{{ salida.fecha |localtime|date:"d/m/Y H:i" }}</td>  <!-- Hora de Bogotá con formato -->
+                    <td>{{ salida.categoria }}</td>  <!-- Categoría del producto -->
+                    <td>{{ salida.usuario.first_name }} {{ salida.usuario.last_name }}</td>  <!-- Usuario logueado (mostrar username) -->
+                    <td>{{ salida.precio }}</td>  <!-- Precio del producto -->
+                    <td>
+                        <form method="POST" action="{% url 'eliminar_salida' salida.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>                        
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No hay salidas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <script src="{% static 'js/desayunos.js' %}"></script>
+
+    <script>
+        document.getElementById('generar_reporte').addEventListener('click', function() {
+            // Obtener las fechas seleccionadas
+            const fechaInicio = document.getElementById('fecha_inicio').value;
+            const fechaFin = document.getElementById('fecha_fin').value;
+
+            // Comprobar si las fechas son válidas
+            if (!fechaInicio || !fechaFin) {
+                alert('Por favor, seleccione un rango de fechas.');
+                return;
+            }
+
+            // Redirigir al servidor con las fechas como parámetros
+            window.location.href = `/desayunos/reporte/?fecha_inicio=${fechaInicio}&fecha_fin=${fechaFin}`;
+        });
+
+         // Ocultar las alertas
+        setTimeout(function() {
+            var alertBox = document.getElementById('message-alert');
+            if (alertBox) {
+                alertBox.style.display = 'none';
+            }
+        }, 6000);
+    </script>
+{% endblock %}

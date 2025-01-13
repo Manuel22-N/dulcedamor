@@ -88,3 +88,17 @@ class Producto(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+class Salida(models.Model):
+    producto = models.CharField(max_length=255)
+    cantidad = models.IntegerField()
+    fecha = models.DateTimeField(auto_now_add=True)
+    categoria = models.CharField(max_length=100)
+    usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE)  # Relación con el usuario que hace la salida
+    precio = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        db_table = 'salidas'
+
+    def __str__(self):
+        return f"{self.producto} - {self.cantidad} unidades"

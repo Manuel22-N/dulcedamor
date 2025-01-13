@@ -98,8 +98,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com'  # Servidor SMTP de Brevo
 EMAIL_PORT = 587  # Puerto para TLS
 EMAIL_USE_TLS = True  # Habilitar TLS
-EMAIL_HOST_USER = '7c32f2001@smtp-brevo.com'  # Reemplaza con tu correo de Brevo
-EMAIL_HOST_PASSWORD = 'wmna0csZNrRybTKt'  # Reemplaza con tu clave API de Brevo
+EMAIL_HOST_USER = '7c32f2001@smtp-brevo.com'  # Correo de Brevo
+EMAIL_HOST_PASSWORD = 'wmna0csZNrRybTKt'  # Clave API de Brevo
 DEFAULT_FROM_EMAIL = 'desayunosdulcedeamour@gmail.com'  # El correo desde el que se envían los mensajes
 
 
@@ -131,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Bogota'
 
 USE_I18N = True
 
