@@ -80,8 +80,11 @@
                     <td>{{ producto.codigo }}</td>
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.precio }}</td>
-                    <td>{% if producto.stock < 20 %}
+                    <td>
+                        {% if producto.stock < 20 %}
                             <span class="text-danger">{{ producto.stock }}</span>  <!-- Rojo si el stock es menor a 20 -->
+                        {% elif producto.stock > 50 %}
+                            <span class="text-success">{{ producto.stock }}</span>  <!-- Verde si el stock es mayor a 50 -->
                         {% else %}
                             {{ producto.stock }}  <!-- De lo contrario, muestra el stock normalmente -->
                         {% endif %}
@@ -103,15 +106,22 @@
                     <td>
                         <a href="{% url 'actualizar_producto' producto.id %}?codigo={{ producto.codigo }}" class="btn btn-success">
                             <i class="fas fa-edit"></i>
-                        </a>                        
-                        <form action="{% url 'productos' %}" method="post" class="d-inline">
-                            {% csrf_token %}
-                            <input type="hidden" name="producto" value="{{ producto.id }}">
-                            <button class="btn btn-danger btn-sm" type="submit" name="eliminar_producto">
-                                <i class="fas fa-trash-alt"></i> 
-                            </button>
-                        </form>
-                    </td>
+                        </a>
+                    
+                        <!-- Verificar si el usuario tiene el rol 'Auxiliar' -->
+                        {% if user.role.name != 'Auxiliar' %}
+                            <!-- Mostrar el botón de eliminar solo si el usuario no es del rol 'Auxiliar' -->
+                            <form action="{% url 'productos' %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="producto" value="{{ producto.id }}">
+                                <button class="btn btn-danger btn-sm" type="submit" name="eliminar_producto">
+                                    <i class="fas fa-trash-alt"></i> 
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="text-muted">Sin permiso para eliminar</span>
+                        {% endif %}
+                    </td>                    
                 </tr>
                 {% empty %}
                 <tr>

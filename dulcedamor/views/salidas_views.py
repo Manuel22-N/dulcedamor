@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from users.models import Salida
-
+from django.contrib.auth.decorators import login_required
 
 def salidas(request):
     """

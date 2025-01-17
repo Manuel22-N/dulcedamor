@@ -58,10 +58,14 @@
     </li>
     
     <!-- Usuarios -->
+    {% if user.role.name != 'Auxiliar' %}
     <li class="nav-item">
         <a class="nav-link" href="{% url 'gestionar_usuarios' %}">
             <i class="fas fa-user"></i>
             <span>Usuarios</span>
         </a>
     </li>
+    {% else %}
+    <span class="text-muted">No disponible</span>
+    {% endif %}
 </ul>

@@ -83,6 +83,7 @@
                                 <i class="fas fa-edit"></i>
                             </a>
 
+                            {% if user.role.name != 'Auxiliar' %}
                             <!-- Formulario para eliminar la categoría -->
                             <form action="{% url 'categorias' %}" method="post" class="d-inline">
                                 {% csrf_token %}
@@ -91,6 +92,9 @@
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
+                            {% else %}
+                            <span class="text-muted">Sin permiso para eliminar</span>
+                            {% endif %}       
                         </td>
                     </tr>
                     {% empty %}

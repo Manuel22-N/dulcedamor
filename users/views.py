@@ -33,12 +33,10 @@ def user_login(request):
             user_role = user.role.name.lower() if user.role else None  # Convertir a minúsculas por consistencia
 
             # Redirigir al dashboard si es administrador
-            if user_role == 'administrador':
-                return redirect('dashboard')
+            if request.user.role.name == 'Administrador' or request.user.role.name == 'Auxiliar':
+                return redirect('dashboard')  # Redirigir al dashboard
 
-            # Mostrar mensaje si es auxiliar
-            elif user_role == 'auxiliar':
-                return HttpResponse(f"Inicio de sesión exitoso como {user_role}")
+           
 
             # Si no tiene un rol válido, mostrar un mensaje de error
             else:

@@ -82,17 +82,22 @@
                     <td>{{ forloop.counter }}</td>  <!-- Número de fila -->
                     <td>{{ salida.producto }}</td>  <!-- Nombre del producto -->
                     <td>{{ salida.cantidad }}</td>  <!-- Cantidad de producto -->
-                    <td>{{ salida.fecha |localtime|date:"d/m/Y H:i" }}</td>  <!-- Hora de Bogotá con formato -->
+                    <td>{{ salida.fecha }}</td>  <!-- Hora de Bogotá con formato -->
                     <td>{{ salida.categoria }}</td>  <!-- Categoría del producto -->
                     <td>{{ salida.usuario.first_name }} {{ salida.usuario.last_name }}</td>  <!-- Usuario logueado (mostrar username) -->
                     <td>{{ salida.precio }}</td>  <!-- Precio del producto -->
                     <td>
+                         <!-- Verificar si el usuario tiene el rol 'Auxiliar' -->
+                         {% if user.role.name != 'Auxiliar' %}
                         <form method="POST" action="{% url 'eliminar_salida' salida.id %}" class="d-inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
-                        </form>                        
+                        </form>
+                        {% else %}
+                        <span class="text-muted">Sin permiso para eliminar</span>
+                        {% endif %}                       
                     </td>
                 </tr>
                 {% empty %}

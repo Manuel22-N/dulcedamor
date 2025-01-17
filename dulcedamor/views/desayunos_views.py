@@ -82,6 +82,7 @@ def guardar_desayuno(request):
                     categoria=categoria_nombre  # Almacenar la categoría en la salida
                 )
             
+            
             return JsonResponse({"success": True, "mensaje": "Operación exitosa. Los productos fueron descontados y registrados en las salidas."})
 
         except json.JSONDecodeError:
@@ -146,3 +147,4 @@ def generar_reporte(request):
     pdf.save()
 
     return response
+

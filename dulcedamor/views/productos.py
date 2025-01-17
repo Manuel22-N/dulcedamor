@@ -22,13 +22,17 @@ def productos(request):
     # Manejo de eliminación de productos
     if request.method == 'POST':
         if 'eliminar_producto' in request.POST:
-            producto_id = request.POST.get('producto')
-            try:
-                producto = Producto.objects.get(id=producto_id)
-                producto.delete()  # Eliminar el producto
-                mensaje = "Producto eliminado correctamente"  # Mensaje de éxito
-            except Producto.DoesNotExist:
-                mensaje = "El producto no existe"  # Mensaje de error si el producto no existe
+            # Verificar si el usuario tiene el rol de 'administrador'
+            if request.user.role != 'Auxiliar':
+                mensaje = "No tienes permisos para eliminar productos."
+            else:
+                producto_id = request.POST.get('producto')
+                try:
+                    producto = Producto.objects.get(id=producto_id)
+                    producto.delete()  # Eliminar el producto
+                    mensaje = "Producto eliminado correctamente"  # Mensaje de éxito
+                except Producto.DoesNotExist:
+                    mensaje = "El producto no existe"  # Mensaje de error si el producto no existe
 
             return redirect('productos')  # Redirigir a la misma página después de eliminar
     
